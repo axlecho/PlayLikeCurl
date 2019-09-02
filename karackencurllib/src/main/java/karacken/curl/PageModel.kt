@@ -9,4 +9,15 @@ class PageModel : ViewModel() {
     val res: MutableLiveData<List<String>> = MutableLiveData<List<String>>().default(mutableListOf())
 
     val currentPosition: MutableLiveData<Int> = MutableLiveData<Int>().default(0)
+
+    fun isLast(): Boolean {
+        res.value?.let {
+            return it.size - 1 == currentPosition.value
+        }
+        return true
+    }
+
+    fun isFirst(): Boolean {
+        return currentPosition.value == 0
+    }
 }

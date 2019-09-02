@@ -57,8 +57,6 @@ open class Page(screen_width: Int) {
     open fun calculateVerticesCoords() {
         h_w_ratio = bitmap_ratio
         h_w_correction = (h_w_ratio - 1f) / 2.0f
-
-
     }
 
     private fun calculateFacesCoords() {
@@ -144,17 +142,17 @@ open class Page(screen_width: Int) {
         if (this.res_id.isEmpty()) return
 
         var bitmap: Bitmap? = null
-        var `is`: InputStream? = null
+        var inputStream: InputStream? = null
         try {
-            `is` = context.assets.open(this.res_id)
-            bitmap = BitmapFactory.decodeStream(`is`)
+            inputStream = context.assets.open(this.res_id)
+            bitmap = BitmapFactory.decodeStream(inputStream)
 
         } catch (e: IOException) {
 
         } finally {
             try {
-                `is`!!.close()
-                `is` = null
+                inputStream!!.close()
+                inputStream = null
             } catch (e: IOException) {
             }
 
@@ -167,10 +165,8 @@ open class Page(screen_width: Int) {
 
         gl.glGenTextures(1, textures, 0)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
-
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST.toFloat())
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR.toFloat())
-
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT.toFloat())
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT.toFloat())
 
@@ -180,7 +176,6 @@ open class Page(screen_width: Int) {
     }
 
     companion object {
-
         val GRID = 25
     }
 }
