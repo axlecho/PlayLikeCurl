@@ -60,7 +60,6 @@ open class Page(screen_width: Int) {
     }
 
     private fun calculateFacesCoords() {
-
         for (row in 0 until GRID)
             for (col in 0 until GRID) {
                 val pos = 6 * (row * GRID + col)
@@ -77,11 +76,9 @@ open class Page(screen_width: Int) {
     }
 
     private fun calculateTextureCoords() {
-
         for (row in 0..GRID)
             for (col in 0..GRID) {
                 val pos = 2 * (row * (GRID + 1) + col)
-
                 texture[pos] = col / GRID.toFloat()
                 texture[pos + 1] = 1 - row / GRID.toFloat()
             }
@@ -110,31 +107,35 @@ open class Page(screen_width: Int) {
     fun draw(gl: GL10, context: Context) {
 
         if (needtextureupdate) {
-
             needtextureupdate = false
             loadGLTexture(gl, context)
         }
         calculateVerticesCoords()
 
-
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
-
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
-
         gl.glFrontFace(GL10.GL_CCW)
-
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer)
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer)
-
         gl.glDrawElements(GL10.GL_TRIANGLES, indices.size, GL10.GL_UNSIGNED_SHORT, indexBuffer)
-
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
     }
 
-    private fun updateTexture() {
+    fun loadInputStreamToGLTexture(gl: GL10, inputStream: InputStream) {
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        loadBitmapToGLTexture(gl, bitmap)
+    }
 
+    fun loadBitmapToGLTexture(gl: GL10, bitmap: Bitmap) {
+        gl.glGenTextures(1, textures, 0)
+        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST.toFloat())
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR.toFloat())
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT.toFloat())
+        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT.toFloat())
+        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
     }
 
     fun loadGLTexture(gl: GL10, context: Context) {
@@ -162,15 +163,6 @@ open class Page(screen_width: Int) {
         else
             bitmap_ratio = bitmap!!.width.toFloat() / bitmap.height.toFloat()
 
-
-        gl.glGenTextures(1, textures, 0)
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST.toFloat())
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR.toFloat())
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT.toFloat())
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT.toFloat())
-
-        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
 
         bitmap.recycle()
     }
