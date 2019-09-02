@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
+import karacken.curl.utils.PLog
 
 class PageAnimate(context: Context, private val model: PageModel) {
     companion object {
@@ -99,10 +100,10 @@ class PageAnimate(context: Context, private val model: PageModel) {
             return false
         }
 
-        if (e1.x - e2.x > SWIPE_MIN_DISTANCE && model.isLast()) {
+        if (e1.x - e2.x > SWIPE_MIN_DISTANCE && !model.isLast()) {
             animatePagetoDefault(PageRenderer.PAGE_RGHT, true, DecelerateInterpolator())
             return true
-        } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE && model.isFirst()) {
+        } else if (e2.x - e1.x > SWIPE_MIN_DISTANCE && !model.isFirst()) {
             animatePagetoDefault(PageRenderer.PAGE_LEFT, true, DecelerateInterpolator())
             return true
         }
@@ -114,6 +115,7 @@ class PageAnimate(context: Context, private val model: PageModel) {
 
     private fun processPageChange(page_type: Int) {
         model.currentPosition.value?.let {
+            PLog.v(model.currentPosition.value.toString())
             model.currentPosition.value = if (page_type == PageRenderer.PAGE_LEFT) it - 1 else it + 1
         }
     }

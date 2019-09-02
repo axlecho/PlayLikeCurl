@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.animation.DecelerateInterpolator
+import karacken.curl.utils.PLog
 
 class PageSurfaceView(context: FragmentActivity, private val model: PageModel) : GLSurfaceView(context), GestureDetector.OnGestureListener {
 
@@ -24,6 +25,7 @@ class PageSurfaceView(context: FragmentActivity, private val model: PageModel) :
         }
 
         this.model.res.value?.let { list ->
+            PLog.v("[index] -> " + index)
             when (index) {
                 0 -> animate.updatePageRes(list[index], list[index], list[index + 1])
                 list.size - 1 -> animate.updatePageRes(list[index - 1], list[index], list[index])
@@ -77,7 +79,7 @@ class PageSurfaceView(context: FragmentActivity, private val model: PageModel) :
     }
 
     override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        return animate.onFling(e1,e2,velocityX,velocityY)
+        return animate.onFling(e1, e2, velocityX, velocityY)
     }
 
 

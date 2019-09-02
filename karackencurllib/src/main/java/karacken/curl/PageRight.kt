@@ -32,8 +32,6 @@ class PageRight(screen_width: Int) : Page(screen_width) {
     }
 
     companion object {
-
-
         private val depth = -0.003f
     }
 

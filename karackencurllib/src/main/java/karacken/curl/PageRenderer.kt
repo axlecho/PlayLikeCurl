@@ -164,8 +164,6 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun updateCurlPosition(value: Float) {
-
-
         when (active_page) {
             PageRenderer.PAGE.LEFT -> leftPage.curlCirclePosition = value
             PageRenderer.PAGE.RIGHT -> rightPage.curlCirclePosition = value
@@ -174,7 +172,6 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun resetPages() {
-
         leftPage.curlCirclePosition = Page.GRID * (PAGE_RGHT.toFloat() / 100f)
         rightPage.curlCirclePosition = Page.GRID.toFloat()
         frontPage.curlCirclePosition = Page.GRID.toFloat()

@@ -32,7 +32,6 @@ open class Page(screen_width: Int) {
 
     var res_id = ""
         set(res_id) {
-
             field = res_id
             needtextureupdate = true
         }
@@ -85,7 +84,6 @@ open class Page(screen_width: Int) {
     }
 
     init {
-
         this.screen_width = screen_width
         calculateVerticesCoords()
         calculateFacesCoords()
@@ -105,13 +103,11 @@ open class Page(screen_width: Int) {
     }
 
     fun draw(gl: GL10, context: Context) {
-
         if (needtextureupdate) {
             needtextureupdate = false
             loadGLTexture(gl, context)
         }
         calculateVerticesCoords()
-
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
@@ -126,6 +122,7 @@ open class Page(screen_width: Int) {
     fun loadInputStreamToGLTexture(gl: GL10, inputStream: InputStream) {
         val bitmap = BitmapFactory.decodeStream(inputStream)
         loadBitmapToGLTexture(gl, bitmap)
+        bitmap.recycle()
     }
 
     fun loadBitmapToGLTexture(gl: GL10, bitmap: Bitmap) {
@@ -136,35 +133,18 @@ open class Page(screen_width: Int) {
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT.toFloat())
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT.toFloat())
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
+        //bitmap_ratio = if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+        //    bitmap.height.toFloat() / bitmap.width.toFloat()
+        //else
+        //    bitmap.width.toFloat() / bitmap.height.toFloat()
+
+
     }
 
     fun loadGLTexture(gl: GL10, context: Context) {
-
         if (this.res_id.isEmpty()) return
-
-        var bitmap: Bitmap? = null
-        var inputStream: InputStream? = null
-        try {
-            inputStream = context.assets.open(this.res_id)
-            bitmap = BitmapFactory.decodeStream(inputStream)
-
-        } catch (e: IOException) {
-
-        } finally {
-            try {
-                inputStream!!.close()
-                inputStream = null
-            } catch (e: IOException) {
-            }
-
-        }
-        if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            bitmap_ratio = bitmap!!.height.toFloat() / bitmap.width.toFloat()
-        else
-            bitmap_ratio = bitmap!!.width.toFloat() / bitmap.height.toFloat()
-
-
-        bitmap.recycle()
+        val inputStream = context.assets.open(this.res_id)
+        loadInputStreamToGLTexture(gl, inputStream)
     }
 
     companion object {
