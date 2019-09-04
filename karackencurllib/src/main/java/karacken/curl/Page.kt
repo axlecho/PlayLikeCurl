@@ -107,7 +107,6 @@ open class Page(screen_width: Int) {
     fun loadInputStreamToGLTexture(gl: GL10, inputStream: InputStream) {
         val bitmap = BitmapFactory.decodeStream(inputStream)
         loadBitmapToGLTexture(gl, bitmap)
-        bitmap.recycle()
     }
 
     fun loadBitmapToGLTexture(gl: GL10, bitmap: Bitmap) {

@@ -15,16 +15,12 @@ import javax.microedition.khronos.opengles.GL10
  */
 class PageRenderer(private val context: Context) : Renderer {
 
-    var leftPage: Page
     var frontPage: Page
-    var rightPage: Page
     var active_page: PAGE? = null
 
     val currentPagePerc: Int
         get() {
             return when (active_page) {
-                PageRenderer.PAGE.LEFT -> (leftPage.curlCirclePosition / Page.GRID * 100).toInt()
-                PageRenderer.PAGE.RIGHT -> (rightPage.curlCirclePosition / Page.GRID * 100).toInt()
                 PageRenderer.PAGE.CURRENT -> (frontPage.curlCirclePosition / Page.GRID * 100).toInt()
                 else -> (frontPage.curlCirclePosition / Page.GRID * 100).toInt()
             }
@@ -32,8 +28,6 @@ class PageRenderer(private val context: Context) : Renderer {
     val currentPageValue: Float
         get() {
             return when (active_page) {
-                PageRenderer.PAGE.LEFT -> leftPage.curlCirclePosition
-                PageRenderer.PAGE.RIGHT -> rightPage.curlCirclePosition
                 PageRenderer.PAGE.CURRENT -> frontPage.curlCirclePosition
                 else -> frontPage.curlCirclePosition
             }
@@ -53,22 +47,16 @@ class PageRenderer(private val context: Context) : Renderer {
         val width = size.x
         val height = size.y
 
-        leftPage = PageLeft(width)
         frontPage = PageFront(width)
-        rightPage = PageRight(width)
 
 
         togglePageActive(PAGE.CURRENT)
-        leftPage.curlCirclePosition = Page.GRID * (PAGE_RGHT.toFloat() / 100f)
-        rightPage.curlCirclePosition = Page.GRID.toFloat()
 
 
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
         frontPage.loadGLTexture(gl, this.context)
-        rightPage.loadGLTexture(gl, this.context)
-        leftPage.loadGLTexture(gl, this.context)
 
 
         gl.glEnable(GL10.GL_TEXTURE_2D)
@@ -127,9 +115,7 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun updatePageRes(lef_res: String, front_res: String, right_res: String) {
-        leftPage.res_id = lef_res
         frontPage.res_id = front_res
-        rightPage.res_id = right_res
 
     }
 
@@ -153,15 +139,11 @@ class PageRenderer(private val context: Context) : Renderer {
 
     fun updateCurlPosition(value: Float) {
         when (active_page) {
-            PageRenderer.PAGE.LEFT -> leftPage.curlCirclePosition = value
-            PageRenderer.PAGE.RIGHT -> rightPage.curlCirclePosition = value
             PageRenderer.PAGE.CURRENT -> frontPage.curlCirclePosition = value
         }
     }
 
     fun resetPages() {
-        leftPage.curlCirclePosition = Page.GRID * (PAGE_RGHT.toFloat() / 100f)
-        rightPage.curlCirclePosition = Page.GRID.toFloat()
         frontPage.curlCirclePosition = Page.GRID.toFloat()
         togglePageActive(PAGE.CURRENT)
 
