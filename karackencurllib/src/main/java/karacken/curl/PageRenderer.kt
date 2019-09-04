@@ -87,26 +87,23 @@ class PageRenderer(private val context: Context) : Renderer {
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT or GL10.GL_DEPTH_BUFFER_BIT)
         gl.glLoadIdentity()
 
+//        gl.glPushMatrix()
+//        gl.glTranslatef(0.0f, 0.0f, -2.0f)
+//        gl.glTranslatef(-0.5f, -0.5f, 0.0f)
+//        leftPage.draw(gl, context)
+//        gl.glPopMatrix()
+
         gl.glPushMatrix()
         gl.glTranslatef(0.0f, 0.0f, -2.0f)
         gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-
-        leftPage.draw(gl, context)
-        gl.glPopMatrix()
-
-        gl.glPushMatrix()
-        gl.glTranslatef(0.0f, 0.0f, -2.0f)
-        gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-
         frontPage.draw(gl, context)
         gl.glPopMatrix()
 
-        gl.glPushMatrix()
-        gl.glTranslatef(0.0f, 0.0f, -2.0f)
-        gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-        rightPage.draw(gl, context)
-
-        gl.glPopMatrix()
+//        gl.glPushMatrix()
+//        gl.glTranslatef(0.0f, 0.0f, -2.0f)
+//        gl.glTranslatef(-0.5f, -0.5f, 0.0f)
+//        rightPage.draw(gl, context)
+//        gl.glPopMatrix()
 
     }
 
@@ -143,19 +140,10 @@ class PageRenderer(private val context: Context) : Renderer {
 
             when (active_page) {
                 PageRenderer.PAGE.LEFT -> {
-                    leftPage.setIsactive(true)
-                    frontPage.setIsactive(false)
-                    rightPage.setIsactive(false)
                 }
                 PageRenderer.PAGE.RIGHT -> {
-                    leftPage.setIsactive(false)
-                    frontPage.setIsactive(false)
-                    rightPage.setIsactive(true)
                 }
                 PageRenderer.PAGE.CURRENT -> {
-                    leftPage.setIsactive(false)
-                    frontPage.setIsactive(true)
-                    rightPage.setIsactive(false)
                 }
             }
 

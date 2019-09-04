@@ -16,8 +16,7 @@ class PageLeft(screen_width: Int) : Page(screen_width) {
             for (col in 0..Page.GRID) {
                 val pos = 3 * (row * (Page.GRID + 1) + col)
 
-                if (!isactive())
-                    vertices[pos + 2] = depth
+                vertices[pos + 2] = depth
 
                 var perc = 1.0f - curlCirclePosition / Page.GRID.toFloat()
                 perc *= 0.75f
@@ -36,7 +35,6 @@ class PageLeft(screen_width: Int) : Page(screen_width) {
 
 
 
-                if (isactive())
                     vertices[pos + 2] = (calc_r * Math.sin(3.14 / (Page.GRID * 0.50f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
                 val w_h_ratio = 1 - calc_r
                 vertices[pos] = col.toFloat() / Page.GRID.toFloat() * w_h_ratio - mov_x

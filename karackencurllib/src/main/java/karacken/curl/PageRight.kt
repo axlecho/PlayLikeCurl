@@ -14,7 +14,6 @@ class PageRight(screen_width: Int) : Page(screen_width) {
             for (col in 0..Page.GRID) {
                 val pos = 3 * (row * (Page.GRID + 1) + col)
 
-                if (!isactive())
                     vertices[pos + 2] = depth
 
                 vertices[pos] = col.toFloat() / Page.GRID.toFloat()

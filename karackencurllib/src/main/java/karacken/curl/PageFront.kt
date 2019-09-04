@@ -14,9 +14,7 @@ class PageFront(screen_width: Int) : Page(screen_width) {
         for (row in 0..Page.GRID)
             for (col in 0..Page.GRID) {
                 val pos = 3 * (row * (Page.GRID + 1) + col)
-
-                if (!isactive())
-                    vertices[pos + 2] = depth
+                vertices[pos + 2] = depth
 
                 val perc = 1.0f - curlCirclePosition / Page.GRID.toFloat()
                 val dx = Page.GRID - curlCirclePosition
@@ -31,10 +29,7 @@ class PageFront(screen_width: Int) : Page(screen_width) {
                 if (perc > 0.05f)
                     mov_x = perc - 0.05f
 
-
-
-                if (isactive())
-                    vertices[pos + 2] = (calc_r * Math.sin(3.14 / (Page.GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
+                vertices[pos + 2] = (calc_r * Math.sin(3.14 / (Page.GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
                 val w_h_ratio = 1 - calc_r
 
                 vertices[pos] = col.toFloat() / Page.GRID.toFloat() * w_h_ratio - mov_x

@@ -1,12 +1,10 @@
 package karacken.curl
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLUtils
 
-import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -15,27 +13,16 @@ import java.nio.ShortBuffer
 
 import javax.microedition.khronos.opengles.GL10
 
-/**
- * Created by karacken on 18/11/16.
- */
 open class Page(screen_width: Int) {
-
     val RADIUS = 0.18f
     var curlCirclePosition = 25f
-    internal var bitmap_ratio = 1.0f
-    internal var screen_width = 0
+    private var bitmap_ratio = 1.0f
+    private var screen_width = 0
 
-    private var isactive = false
     var vertexBuffer: FloatBuffer? = null
     private val textureBuffer: FloatBuffer
     private val indexBuffer: ShortBuffer
 
-    var res_id = ""
-        set(res_id) {
-            field = res_id
-            needtextureupdate = true
-        }
-    private var needtextureupdate = false
 
     private val textures = IntArray(1)
     var vertices = FloatArray((GRID + 1) * (GRID + 1) * 3)
@@ -44,14 +31,9 @@ open class Page(screen_width: Int) {
 
     internal var h_w_ratio: Float = 0.toFloat()
     internal var h_w_correction: Float = 0.toFloat()
-    fun isactive(): Boolean {
-        return isactive
-    }
 
 
-    fun setIsactive(isactive: Boolean) {
-        this.isactive = isactive
-    }
+    var res_id:String =""
 
     open fun calculateVerticesCoords() {
         h_w_ratio = bitmap_ratio
@@ -103,10 +85,8 @@ open class Page(screen_width: Int) {
     }
 
     fun draw(gl: GL10, context: Context) {
-        if (needtextureupdate) {
-            needtextureupdate = false
-            loadGLTexture(gl, context)
-        }
+        loadGLTexture(gl, context)
+
         calculateVerticesCoords()
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
@@ -114,9 +94,14 @@ open class Page(screen_width: Int) {
         gl.glFrontFace(GL10.GL_CCW)
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer)
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer)
-        // gl.glDrawElements(GL10.GL_TRIANGLES, indices.size, GL10.GL_UNSIGNED_SHORT, indexBuffer)
+        gl.glDrawElements(GL10.GL_TRIANGLES, indices.size, GL10.GL_UNSIGNED_SHORT, indexBuffer)
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY)
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
+    }
+
+    fun loadGLTexture(gl: GL10, context: Context) {
+        val inputStream = context.assets.open(this.res_id)
+        loadInputStreamToGLTexture(gl, inputStream)
     }
 
     fun loadInputStreamToGLTexture(gl: GL10, inputStream: InputStream) {
@@ -137,15 +122,9 @@ open class Page(screen_width: Int) {
         //    bitmap.height.toFloat() / bitmap.width.toFloat()
         //else
         //    bitmap.width.toFloat() / bitmap.height.toFloat()
-
-
     }
 
-    fun loadGLTexture(gl: GL10, context: Context) {
-        if (this.res_id.isEmpty()) return
-        val inputStream = context.assets.open(this.res_id)
-        loadInputStreamToGLTexture(gl, inputStream)
-    }
+
 
     companion object {
         val GRID = 25

@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView
 import android.support.v4.app.FragmentActivity
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import karacken.curl.utils.PLog
 
@@ -67,6 +68,7 @@ class PageSurfaceView(context: FragmentActivity, private val model: PageModel) :
     }
 
     override fun onSingleTapUp(e: MotionEvent): Boolean {
+        animate.animatePagetoDefault(PageRenderer.PAGE_RGHT, false, AccelerateDecelerateInterpolator())
         return false
     }
 
