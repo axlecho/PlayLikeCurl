@@ -10,30 +10,30 @@ class PageFront(screen_width: Int) : Page(screen_width) {
     override fun calculateVerticesCoords() {
 
         super.calculateVerticesCoords()
-        val angle = 1.0f / (Page.GRID.toFloat() * RADIUS)
-        for (row in 0..Page.GRID)
-            for (col in 0..Page.GRID) {
-                val pos = 3 * (row * (Page.GRID + 1) + col)
-                vertices[pos + 2] = depth
+        val angle = 1.0f / (GRID.toFloat() * RADIUS)
 
-                val perc = 1.0f - curlCirclePosition / Page.GRID.toFloat()
-                val dx = Page.GRID - curlCirclePosition
-                var calc_r = perc * RADIUS
-                if (calc_r > RADIUS)
-                    calc_r = RADIUS
+        // 计算每个顶点坐标
+        for (row in 0..GRID)
+            for (col in 0..GRID) {
+                val pos = 3 * (row * (GRID + 1) + col)
+                // vertices[pos + 2] = depth
 
-                calc_r = RADIUS * 1
+                val perc = 1.0f - curlCirclePosition / GRID.toFloat()
+                val dx = GRID - curlCirclePosition
+                // var calc_r = perc * RADIUS
+                // if (calc_r > RADIUS)  calc_r = RADIUS
+                var calc_r = RADIUS * 1
                 var mov_x = 0f
-                if (perc < 0.20f)
-                    calc_r = RADIUS * perc * 5f
-                if (perc > 0.05f)
-                    mov_x = perc - 0.05f
 
-                vertices[pos + 2] = (calc_r * Math.sin(3.14 / (Page.GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
+                if (perc < 0.20f) calc_r = RADIUS * perc * 5f
+                if (perc > 0.05f) mov_x = perc - 0.05f
+
                 val w_h_ratio = 1 - calc_r
 
-                vertices[pos] = col.toFloat() / Page.GRID.toFloat() * w_h_ratio - mov_x
-                vertices[pos + 1] = row.toFloat() / Page.GRID.toFloat() * h_w_ratio - h_w_correction
+                vertices[pos] = col.toFloat() / GRID.toFloat() * w_h_ratio - mov_x
+                vertices[pos + 1] = row.toFloat() / GRID.toFloat() * h_w_ratio - h_w_correction
+                vertices[pos + 2] = (calc_r * Math.sin(3.14 / (GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
+
             }
 
         val byteBuf = ByteBuffer.allocateDirect(vertices.size * 4)

@@ -14,8 +14,13 @@ import java.nio.ShortBuffer
 import javax.microedition.khronos.opengles.GL10
 
 open class Page(screen_width: Int) {
-    val RADIUS = 0.18f
+    companion object {
+        val RADIUS = 0.18f              // 波浪半径
+        val GRID = 25                   // 网格
+    }
+
     var curlCirclePosition = 25f
+
     private var bitmap_ratio = 1.0f
     private var screen_width = 0
 
@@ -32,8 +37,10 @@ open class Page(screen_width: Int) {
     internal var h_w_ratio: Float = 0.toFloat()
     internal var h_w_correction: Float = 0.toFloat()
 
-
-    var res_id:String =""
+    fun setRes(inputStream:InputStream) {
+        bitmap = BitmapFactory.decodeStream(inputStream)
+    }
+    private lateinit var bitmap:Bitmap
 
     open fun calculateVerticesCoords() {
         h_w_ratio = bitmap_ratio
@@ -82,11 +89,11 @@ open class Page(screen_width: Int) {
         indexBuffer = byteBuf.asShortBuffer()
         indexBuffer.put(indices)
         indexBuffer.position(0)
+
     }
 
     fun draw(gl: GL10, context: Context) {
-        loadGLTexture(gl, context)
-
+        loadBitmapToGLTexture(gl, bitmap)
         calculateVerticesCoords()
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
@@ -99,15 +106,7 @@ open class Page(screen_width: Int) {
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY)
     }
 
-    fun loadGLTexture(gl: GL10, context: Context) {
-        val inputStream = context.assets.open(this.res_id)
-        loadInputStreamToGLTexture(gl, inputStream)
-    }
 
-    fun loadInputStreamToGLTexture(gl: GL10, inputStream: InputStream) {
-        val bitmap = BitmapFactory.decodeStream(inputStream)
-        loadBitmapToGLTexture(gl, bitmap)
-    }
 
     fun loadBitmapToGLTexture(gl: GL10, bitmap: Bitmap) {
         gl.glGenTextures(1, textures, 0)
@@ -121,11 +120,5 @@ open class Page(screen_width: Int) {
         //    bitmap.height.toFloat() / bitmap.width.toFloat()
         //else
         //    bitmap.width.toFloat() / bitmap.height.toFloat()
-    }
-
-
-
-    companion object {
-        val GRID = 25
     }
 }

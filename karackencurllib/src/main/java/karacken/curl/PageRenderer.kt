@@ -56,9 +56,6 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
-        frontPage.loadGLTexture(gl, this.context)
-
-
         gl.glEnable(GL10.GL_TEXTURE_2D)
         gl.glShadeModel(GL10.GL_SMOOTH)
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f)
@@ -115,7 +112,7 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun updatePageRes(lef_res: String, front_res: String, right_res: String) {
-        frontPage.res_id = front_res
+        frontPage.setRes(context.assets.open(lef_res))
 
     }
 
