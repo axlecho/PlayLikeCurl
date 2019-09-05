@@ -12,14 +12,19 @@ import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 
 import javax.microedition.khronos.opengles.GL10
+import android.R.attr.bitmap
+import android.opengl.ETC1.getWidth
+import android.opengl.ETC1.getHeight
+
+
 
 open class Page(screen_width: Int) {
     companion object {
         val RADIUS = 0.18f              // 波浪半径
-        val GRID = 36                   // 网格
+        val GRID = 25                   // 网格
     }
 
-    var curlCirclePosition = 36f
+    var curlCirclePosition = 25f
 
     private var bitmap_ratio = 1.0f
     private var screen_width = 0
@@ -122,6 +127,7 @@ open class Page(screen_width: Int) {
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, GL10.GL_REPEAT.toFloat())
         gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT.toFloat())
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0)
+        bitmap_ratio = bitmap.height.toFloat() / bitmap.width.toFloat()
         //bitmap_ratio = if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         //    bitmap.height.toFloat() / bitmap.width.toFloat()
         //else
