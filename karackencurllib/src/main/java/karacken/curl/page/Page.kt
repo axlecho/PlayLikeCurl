@@ -1,4 +1,4 @@
-package karacken.curl
+package karacken.curl.page
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,22 +12,18 @@ import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 
 import javax.microedition.khronos.opengles.GL10
-import android.R.attr.bitmap
-import android.opengl.ETC1.getWidth
-import android.opengl.ETC1.getHeight
-
 
 
 open class Page(screen_width: Int) {
     companion object {
-        val RADIUS = 0.18f              // 波浪半径
-        val GRID = 25                   // 网格
+        const val RADIUS = 0.18f              // 波浪半径
+        const val GRID = 25                   // 网格
     }
 
     var curlCirclePosition = 25f
 
-    private var bitmap_ratio = 1.0f
-    private var screen_width = 0
+    private var bitmap_ratio = 1.0f         // 图片比例
+    private var screen_width = 0            // 视频宽度
 
     var vertexBuffer: FloatBuffer? = null
     private val textureBuffer: FloatBuffer
@@ -35,19 +31,20 @@ open class Page(screen_width: Int) {
 
 
     private val textures = IntArray(1)
-    var vertices = FloatArray((GRID + 1) * (GRID + 1) * 3)
-    private val texture = FloatArray((GRID + 1) * (GRID + 1) * 2)
+    var vertices = FloatArray((GRID + 1) * (GRID + 1) * 3)              // 网格向量
+    private val texture = FloatArray((GRID + 1) * (GRID + 1) * 2)       // 纹理
     private val indices = ShortArray(GRID * GRID * 6)
 
-    internal var h_w_ratio: Float = 0.toFloat()
-    internal var h_w_correction: Float = 0.toFloat()
+     var h_w_ratio: Float = 0.0f
+     var h_w_correction: Float = 0.0f
 
     private var needtextureupdate = true
+    private lateinit var bitmap:Bitmap
 
-    fun setRes(inputStream:InputStream) {
+
+    fun updateRes(inputStream:InputStream) {
         bitmap = BitmapFactory.decodeStream(inputStream)
     }
-    private lateinit var bitmap:Bitmap
 
     open fun calculateVerticesCoords() {
         h_w_ratio = bitmap_ratio

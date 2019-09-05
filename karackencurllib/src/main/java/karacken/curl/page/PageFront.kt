@@ -1,4 +1,4 @@
-package karacken.curl
+package karacken.curl.page
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

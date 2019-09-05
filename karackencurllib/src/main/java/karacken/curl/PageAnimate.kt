@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.Interpolator
+import karacken.curl.page.Page
 import karacken.curl.utils.PLog
 
 class PageAnimate(context: Context, private val model: PageModel) {

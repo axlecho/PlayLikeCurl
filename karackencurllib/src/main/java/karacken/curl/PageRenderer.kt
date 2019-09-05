@@ -5,7 +5,8 @@ import android.content.Context
 import android.graphics.Point
 import android.opengl.GLSurfaceView.Renderer
 import android.opengl.GLU
-import android.view.Display
+import karacken.curl.page.Page
+import karacken.curl.page.PageFront
 
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -112,7 +113,7 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun updatePageRes(lef_res: String, front_res: String, right_res: String) {
-        frontPage.setRes(context.assets.open(lef_res))
+        frontPage.updateRes(context.assets.open(lef_res))
 
     }
 
