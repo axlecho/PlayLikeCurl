@@ -16,10 +16,10 @@ import javax.microedition.khronos.opengles.GL10
 open class Page(screen_width: Int) {
     companion object {
         val RADIUS = 0.18f              // 波浪半径
-        val GRID = 25                   // 网格
+        val GRID = 36                   // 网格
     }
 
-    var curlCirclePosition = 25f
+    var curlCirclePosition = 36f
 
     private var bitmap_ratio = 1.0f
     private var screen_width = 0
@@ -36,6 +36,8 @@ open class Page(screen_width: Int) {
 
     internal var h_w_ratio: Float = 0.toFloat()
     internal var h_w_correction: Float = 0.toFloat()
+
+    private var needtextureupdate = true
 
     fun setRes(inputStream:InputStream) {
         bitmap = BitmapFactory.decodeStream(inputStream)
@@ -93,7 +95,11 @@ open class Page(screen_width: Int) {
     }
 
     fun draw(gl: GL10, context: Context) {
-        loadBitmapToGLTexture(gl, bitmap)
+        if(needtextureupdate) {
+            needtextureupdate=false
+            loadBitmapToGLTexture(gl, bitmap)
+        }
+
         calculateVerticesCoords()
         gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[0])
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY)
