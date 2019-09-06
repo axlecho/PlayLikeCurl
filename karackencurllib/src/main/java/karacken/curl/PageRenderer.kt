@@ -114,7 +114,6 @@ class PageRenderer(private val context: Context) : Renderer {
 
     fun updatePageRes(lef_res: String, front_res: String, right_res: String) {
         frontPage.updateRes(context.assets.open(lef_res))
-
     }
 
     fun togglePageActive(page: PAGE) {
