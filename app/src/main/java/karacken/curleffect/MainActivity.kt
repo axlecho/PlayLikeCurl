@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
 import karacken.curl.PageModel
+import karacken.curl.PageResource
 import karacken.curl.PageSurfaceView
 
 /**
@@ -27,9 +28,11 @@ class MainActivity : AppCompatActivity() {
         pageSurfaceView = PageSurfaceView(this, model)
         setContentView(pageSurfaceView)
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
-            model.res.value = arrayListOf("portrait/page1.png", "portrait/page2.png", "portrait/page3.png", "portrait/page4.png", "portrait/page5.png", "portrait/page6.png", "portrait/page7.png", "portrait/page8.png")
-        else
-            model.res.value = arrayListOf("landscape/page1.png", "landscape/page2.png", "landscape/page3.png", "landscape/page4.png", "landscape/page5.png", "landscape/page6.png", "landscape/page7.png", "landscape/page8.png")
+            model.setImageResources(arrayListOf(PageResource("portrait/page1.png"),
+                    PageResource("portrait/page2.png"),
+                    PageResource("portrait/page3.png"),
+                    PageResource("portrait/page4.png"),
+                    PageResource("portrait/page5.png")))
 
         val display = windowManager.defaultDisplay
         val size = Point()
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         return pageSurfaceView.onPageTouchEvent(event)
     }
 
-    
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {

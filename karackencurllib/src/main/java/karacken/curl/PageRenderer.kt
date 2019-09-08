@@ -5,55 +5,19 @@ import android.content.Context
 import android.graphics.Point
 import android.opengl.GLSurfaceView.Renderer
 import android.opengl.GLU
-import karacken.curl.page.Page
-import karacken.curl.page.PageFront
 
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-/**
- * Created by karacken on 18/11/16.
- */
 class PageRenderer(private val context: Context) : Renderer {
 
-    var frontPage: Page
-    var active_page: PAGE? = null
-
-    val currentPagePerc: Int
-        get() {
-            return when (active_page) {
-                PageRenderer.PAGE.CURRENT -> (frontPage.curlCirclePosition / Page.GRID * 100).toInt()
-                else -> (frontPage.curlCirclePosition / Page.GRID * 100).toInt()
-            }
-        }
-    val currentPageValue: Float
-        get() {
-            return when (active_page) {
-                PageRenderer.PAGE.CURRENT -> frontPage.curlCirclePosition
-                else -> frontPage.curlCirclePosition
-            }
-
-
-        }
-
-
-    enum class PAGE {
-        LEFT, RIGHT, CURRENT
-    }
+    private val frontPage: Page
 
     init {
         val display = (context as Activity).windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
-        val width = size.x
-        val height = size.y
-
-        frontPage = PageFront(width)
-
-
-        togglePageActive(PAGE.CURRENT)
-
-
+        frontPage = Page(size.x)
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -63,7 +27,6 @@ class PageRenderer(private val context: Context) : Renderer {
         gl.glClearDepthf(1.0f)
         gl.glEnable(GL10.GL_DEPTH_TEST)
         gl.glDepthFunc(GL10.GL_LEQUAL)
-
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST)
     }
 
@@ -82,7 +45,7 @@ class PageRenderer(private val context: Context) : Renderer {
         gl.glPushMatrix()
         gl.glTranslatef(0.0f, 0.0f, -2.0f)
         gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-        frontPage.draw(gl, context)
+        frontPage.draw(gl)
         gl.glPopMatrix()
 
 //        gl.glPushMatrix()
@@ -99,7 +62,6 @@ class PageRenderer(private val context: Context) : Renderer {
             height = 1
         }
 
-
         gl.glViewport(0, 0, width, height)
         gl.glMatrixMode(GL10.GL_PROJECTION)
         gl.glLoadIdentity()
@@ -112,45 +74,15 @@ class PageRenderer(private val context: Context) : Renderer {
         gl.glLoadIdentity()
     }
 
-    fun updatePageRes(lef_res: String, front_res: String, right_res: String) {
-        frontPage.updateRes(context.assets.open(lef_res))
-    }
-
-    fun togglePageActive(page: PAGE) {
-
-        if (active_page == null || active_page != page) {
-            active_page = page
-
-            when (active_page) {
-                PageRenderer.PAGE.LEFT -> {
-                }
-                PageRenderer.PAGE.RIGHT -> {
-                }
-                PageRenderer.PAGE.CURRENT -> {
-                }
-            }
-
-        }
-
-    }
-
-    fun updateCurlPosition(value: Float) {
-        when (active_page) {
-            PageRenderer.PAGE.CURRENT -> frontPage.curlCirclePosition = value
-        }
+    fun updatePageRes(resource: PageResource) {
+        frontPage.updateRes(context.assets.open(resource.data))
     }
 
     fun resetPages() {
-        frontPage.curlCirclePosition = Page.GRID.toFloat()
-        togglePageActive(PAGE.CURRENT)
-
+        frontPage.setPercent(0.5f)
     }
 
-    companion object {
-
-        val PAGE_LEFT = 100
-        val PAGE_RGHT = -5
+    fun setPercent(percent: Float) {
+        frontPage.setPercent(percent)
     }
-
-
 }
