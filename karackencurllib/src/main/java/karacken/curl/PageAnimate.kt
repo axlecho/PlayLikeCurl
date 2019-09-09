@@ -1,6 +1,7 @@
 package karacken.curl
 
 import android.content.Context
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import karacken.curl.utils.PLog
 
@@ -15,23 +16,25 @@ class PageAnimate(context: Context) {
     private var x = 0.0f
     private var pos = 0.0f
 
-    fun animatePagetoDefault(interpolator: Interpolator) {
+    fun animatePagetoDefault(front: PageResource, bg: PageResource) {
         val animateCounter = AnimateCounter.Builder()
                 .setCount(100, 0)
-                .setDuration(10000)
-                .setInterpolator(interpolator)
+                .setDuration(3000)
+                .setInterpolator(AccelerateDecelerateInterpolator())
                 .build()
 
 
         animateCounter.setAnimateCounterListener(object : AnimateCounter.AnimateCounterListener {
             override fun onAnimateCounterEnd() {
                 PLog.v("resetPages")
-                renderer.resetPages()
+                // release module,change the data
+                renderer.resetPages(front, bg)
             }
 
             override fun onValueUpdate(value: Float) {
                 val progress = value / 100f
                 PLog.v("onValueUpdate $progress")
+                // lock module
                 renderer.setPercent(progress)
             }
         })

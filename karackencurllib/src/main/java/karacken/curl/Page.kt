@@ -18,6 +18,9 @@ open class Page(screen_width: Int) {
     companion object {
         const val RADIUS = 0.18f              // 波浪半径
         const val GRID = 25                   // 网格
+
+        const val TYPE_CURRENT = 1
+        const val TYPE_BG = 2
     }
 
     private var curlCirclePosition = GRID.toFloat()
@@ -38,6 +41,8 @@ open class Page(screen_width: Int) {
     private var hwRatio: Float = 0.0f
     private var hwCorrection: Float = 0.0f
     private var bitmap: Bitmap? = null
+
+    var status = TYPE_CURRENT
 
     init {
         this.screen_width = screen_width
@@ -105,11 +110,15 @@ open class Page(screen_width: Int) {
     private fun calculateVerticesCoords() {
         hwRatio = bitmap_ratio
         hwCorrection = (hwRatio - 1f) / 2.0f
-        calculateVerticesCoordsFront()
+
+        if(status == TYPE_CURRENT) {
+            calculateVerticesCoordsFront()
+        } else if(status == TYPE_BG) {
+            calculateVerticesCoordsBg()
+        }
     }
 
     private fun calculateVerticesCoordsFront() {
-
         val angle = 1.0f / (GRID.toFloat() * RADIUS)
 
         // 计算每个顶点坐标
@@ -133,7 +142,7 @@ open class Page(screen_width: Int) {
                 val w_h_ratio = 1 - calc_r
 
                 vertices[pos] = col.toFloat() / GRID.toFloat() * w_h_ratio - mov_x                                      // x
-                vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection                         // y
+                vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection                             // y
                 vertices[pos + 2] = (calc_r * Math.sin(3.14 / (GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat()   // z  Asin(2pi/wav*x)
             }
 
@@ -144,16 +153,13 @@ open class Page(screen_width: Int) {
         vertexBuffer?.position(0)
     }
 
-
-    private fun calculateVerticesCoordsRight() {
+    private fun calculateVerticesCoordsBg() {
         val angle = 1.0f / (GRID.toFloat() * RADIUS)
         for (row in 0..GRID)
             for (col in 0..GRID) {
                 val pos = 3 * (row * (GRID + 1) + col)
                 vertices[pos + 2] = -0.003f
                 vertices[pos] = col.toFloat() / GRID.toFloat()
-
-
                 vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection
             }
 
