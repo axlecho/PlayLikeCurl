@@ -14,11 +14,17 @@ class PageSurfaceView(context: Context, private val model: PageModel) : GLSurfac
 
     init {
         this.setRenderer(animate.renderer)
-        model.imageIndex.observeForever {
-            PLog.v("index: $it")
-            if (model.imageIndex.isChanged()) {
-                animate.animatePagetoDefault(AccelerateDecelerateInterpolator())
+        model.imageIndex.observeForever { index ->
+            PLog.v("index: $index")
+            index?.let {
+                model.imageResources.value?.let {
+                    animate.renderer.updatePageRes(it[index])
+                }
             }
+
+            // if (model.imageIndex.isChanged()) {
+            animate.animatePagetoDefault(AccelerateDecelerateInterpolator())
+            // }
         }
 
         model.status.observeForever {
@@ -30,9 +36,7 @@ class PageSurfaceView(context: Context, private val model: PageModel) : GLSurfac
         }
 
         model.imageResources.observeForever {
-            if (it != null && it.isNotEmpty()) {
-                animate.renderer.updatePageRes(it[0])
-            }
+
         }
     }
 

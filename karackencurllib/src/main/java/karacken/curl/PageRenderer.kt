@@ -79,7 +79,7 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     fun resetPages() {
-        frontPage.setPercent(0.5f)
+        frontPage.setPercent(1.0f)
     }
 
     fun setPercent(percent: Float) {

@@ -3,12 +3,15 @@ package karacken.curl
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.GLUtils
+import karacken.curl.utils.PLog
 import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 import java.nio.ShortBuffer
 import javax.microedition.khronos.opengles.GL10
+import kotlin.math.max
+import kotlin.math.min
 
 
 open class Page(screen_width: Int) {
@@ -80,7 +83,8 @@ open class Page(screen_width: Int) {
     }
 
     fun setPercent(percent: Float) {
-        curlCirclePosition = GRID * Math.min(0.0f, Math.max(percent, 1.0f))
+        curlCirclePosition = GRID * min(1.0f, max(percent, 0.0f))
+        PLog.v("setPercent curlCirclePosition $curlCirclePosition")
     }
 
     private fun loadBitmapToGLTexture(gl: GL10, bitmap: Bitmap) {
@@ -131,6 +135,66 @@ open class Page(screen_width: Int) {
                 vertices[pos] = col.toFloat() / GRID.toFloat() * w_h_ratio - mov_x                                      // x
                 vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection                         // y
                 vertices[pos + 2] = (calc_r * Math.sin(3.14 / (GRID * 0.60f) * (col - dx)) + calc_r * 1.1f).toFloat()   // z  Asin(2pi/wav*x)
+            }
+
+        val byteBuf = ByteBuffer.allocateDirect(vertices.size * 4)
+        byteBuf.order(ByteOrder.nativeOrder())
+        vertexBuffer = byteBuf.asFloatBuffer()
+        vertexBuffer?.put(vertices)
+        vertexBuffer?.position(0)
+    }
+
+
+    private fun calculateVerticesCoordsRight() {
+        val angle = 1.0f / (GRID.toFloat() * RADIUS)
+        for (row in 0..GRID)
+            for (col in 0..GRID) {
+                val pos = 3 * (row * (GRID + 1) + col)
+                vertices[pos + 2] = -0.003f
+                vertices[pos] = col.toFloat() / GRID.toFloat()
+
+
+                vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection
+            }
+
+        val byteBuf = ByteBuffer.allocateDirect(vertices.size * 4)
+        byteBuf.order(ByteOrder.nativeOrder())
+        vertexBuffer = byteBuf.asFloatBuffer()
+        vertexBuffer?.put(vertices)
+        vertexBuffer?.position(0)
+
+    }
+
+    private fun calculateVerticesCoordsLeft() {
+        val angle = 1.0f / (GRID.toFloat() * RADIUS)
+        for (row in 0..GRID)
+            for (col in 0..GRID) {
+                val pos = 3 * (row * (GRID + 1) + col)
+                vertices[pos + 2] = -0.001f
+
+                var perc = 1.0f - curlCirclePosition / GRID.toFloat()
+                perc *= 0.75f
+
+                val dx = GRID - curlCirclePosition
+                var calc_r = perc * RADIUS
+                if (calc_r > RADIUS)
+                    calc_r = RADIUS
+
+                calc_r = RADIUS * 1
+                var mov_x = 0f
+                if (perc < 0.20f)
+                    calc_r = RADIUS * perc * 5
+
+                mov_x = perc
+
+
+
+                vertices[pos + 2] = (calc_r * Math.sin(3.14 / (GRID * 0.50f) * (col - dx)) + calc_r * 1.1f).toFloat() //Asin(2pi/wav*x)
+                val w_h_ratio = 1 - calc_r
+                vertices[pos] = col.toFloat() / GRID.toFloat() * w_h_ratio - mov_x
+
+
+                vertices[pos + 1] = row.toFloat() / GRID.toFloat() * hwRatio - hwCorrection
             }
 
         val byteBuf = ByteBuffer.allocateDirect(vertices.size * 4)

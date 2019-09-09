@@ -21,7 +21,7 @@ class PLiveData<T> : MutableLiveData<T>() {
     }
 
     fun isChanged(): Boolean {
-        return provious == this.value
+        return provious != this.value
     }
 }
 
