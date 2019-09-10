@@ -48,11 +48,11 @@ class PageSurfaceView(context: Context, private val model: PageModel) : GLSurfac
         if (mGesturedDetector.onTouchEvent(event))
             return true
 
-        // when (event.action) {
-        //    MotionEvent.ACTION_DOWN -> animate.onDown(event.x)
-        //     MotionEvent.ACTION_MOVE -> animate.onMove(event.x, this.width)
-        //    MotionEvent.ACTION_UP -> animate.onUp(event.x)
-        // }
+         when (event.action) {
+            MotionEvent.ACTION_DOWN -> animate.onDown(event.x)
+             MotionEvent.ACTION_MOVE -> animate.onMove(event.x, this.width)
+            MotionEvent.ACTION_UP -> animate.onUp(event.x)
+         }
         return super.onTouchEvent(event)
     }
 

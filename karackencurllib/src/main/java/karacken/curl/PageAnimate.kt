@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import karacken.curl.utils.PLog
+import kotlin.math.abs
 
 class PageAnimate(context: Context) {
     companion object {
@@ -56,7 +57,11 @@ class PageAnimate(context: Context) {
             if (value <= Page.GRID) {
             }
         } else if (_x - x < 0) {   //  page_right
-            val value = (1 - Math.abs(distance)) * Page.GRID - (Page.GRID - pos)
+            renderer.setPercent(1 - abs(distance))
         }
+    }
+
+    fun onUp(_x: Float) {
+        renderer.setPercent(1.0f)
     }
 }
