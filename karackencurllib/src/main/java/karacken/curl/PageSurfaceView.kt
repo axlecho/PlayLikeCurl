@@ -18,7 +18,9 @@ class PageSurfaceView(context: Context, private val model: PageModel) : GLSurfac
             PLog.v("index: $index")
             index?.let {
                 model.imageResources.value?.let {
-                    animate.animatePagetoDefault(it[index],it[index + 1])
+                    if(model.imageCanGoNext()) {
+                        animate.animatePagetoDefault(it[index], it[index + 1])
+                    }
                 }
             }
 

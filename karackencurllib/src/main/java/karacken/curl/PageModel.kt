@@ -60,14 +60,14 @@ class PageModel : ViewModel() {
         }
     }
 
-    private fun imageCanGoNext(): Boolean {
+     fun imageCanGoNext(): Boolean {
         val index = imageIndex.value ?: return false
         PLog.v("image go next - index $index")
         val imageResources = imageResources.value ?: return false
         return index < imageResources.size - 1
     }
 
-    private fun imageCanGoPrevious(): Boolean {
+     fun imageCanGoPrevious(): Boolean {
         val index = imageIndex.value ?: return false
         return index > 0
     }
