@@ -11,21 +11,15 @@ import javax.microedition.khronos.opengles.GL10
 
 class PageRenderer(private val context: Context) : Renderer {
 
-    private var current: Page
-    private var bg:Page
-    private val srceenWidth:Int
+    private var current: Page? = null
+    private var bg: Page? = null
+    private val srceenWidth: Int
+
     init {
         val display = (context as Activity).windowManager.defaultDisplay
         val size = Point()
         display.getSize(size)
         srceenWidth = size.x
-
-
-        current = Page(srceenWidth)
-        bg = Page(srceenWidth)
-
-        current.status = Page.TYPE_CURRENT
-        bg.status = Page.TYPE_BG
     }
 
     override fun onSurfaceCreated(gl: GL10, config: EGLConfig) {
@@ -53,13 +47,14 @@ class PageRenderer(private val context: Context) : Renderer {
         gl.glPushMatrix()
         gl.glTranslatef(0.0f, 0.0f, -2.0f)
         gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-        current.draw(gl)
+        current?.draw(gl)
         gl.glPopMatrix()
+
 
         gl.glPushMatrix()
         gl.glTranslatef(0.0f, 0.0f, -2.0f)
         gl.glTranslatef(-0.5f, -0.5f, 0.0f)
-        bg.draw(gl)
+        bg?.draw(gl)
         gl.glPopMatrix()
 
     }
@@ -83,22 +78,26 @@ class PageRenderer(private val context: Context) : Renderer {
     }
 
     private fun updatePageRes(front: PageResource, bg: PageResource) {
-        this.current = Page(srceenWidth)
+        if (this.bg == null) {
+            this.current = Page(srceenWidth)
+            this.current?.updateRes(context.assets.open(front.data))
+        } else {
+            this.current = this.bg
+        }
+        this.current?.status = Page.TYPE_CURRENT
+        this.current?.setPercent(1.0f)
+
         this.bg = Page(srceenWidth)
-
-        this.current.status = Page.TYPE_CURRENT
-        this.bg.status = Page.TYPE_BG
-
-        this.current.updateRes(context.assets.open(front.data))
-        this.bg.updateRes(context.assets.open(bg.data))
+        this.bg?.status = Page.TYPE_BG
+        this.bg?.updateRes(context.assets.open(bg.data))
     }
 
-    fun resetPages(front: PageResource,bg: PageResource) {
+    fun resetPages(front: PageResource, bg: PageResource) {
         updatePageRes(front, bg)
     }
 
     fun setPercent(percent: Float) {
-        current.setPercent(percent)
-        bg.setPercent(percent)
+        current?.setPercent(percent)
+        bg?.setPercent(percent)
     }
 }
